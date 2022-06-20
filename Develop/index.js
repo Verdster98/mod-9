@@ -175,12 +175,23 @@ const writeFile = fileContent => {
 
 
 // Function to store input and prompt questions
-const init = () => {
-    return inquirer.prompt(questions)
-    .then(readmeData => {
-        return readmeData;
-    })
+const init = async () => {
+    const readmeData = await inquirer.prompt(questions);
+    return readmeData;
 }
 
 // Function call to initialize app
-init();
+init()
+.then(readmeData => {
+    console.log(readmeData);
+    return generateMarkdown(readmeData);
+})
+.then(pageMd => {
+    return writeFile(pageMd);
+})
+.then(writeFileResponse => {
+    console.log(writeFileResponse.message);
+})
+.catch(err => {
+    console.log(err);
+})
